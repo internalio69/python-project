@@ -27,8 +27,8 @@ class LoginForm:
         self.entryPass = tk.CTkEntry(self.window, width=250, height=30, corner_radius=5, border_width=1, bg_color="transparent", border_color="#ffffff", text_color="white", placeholder_text="Password", show="*", font=("Arial Bold", 14))
         self.entryPass.pack(side="top", pady=2)
         
-        self.passViewBtn = tk.CTkButton(self.window, text="Login", command=self.toggle_pass_visibility, hover_color="#a632c9", fg_color="#9d12c7")
-        self.passViewBtn.pack(side="top", pady=20)
+        self.passViewBtn = tk.CTkButton(self.window, command=self.toggle_pass_visibility, fg_color="transparent", text="V", width=2, height=2)
+        self.passViewBtn.place(x=330, y=242)
         
         self.loginBtn = tk.CTkButton(self.window, text="Login", command=self.login_event, hover_color="#a632c9", fg_color="#9d12c7")
         self.loginBtn.pack(side="top", pady=20)
@@ -139,7 +139,7 @@ def print_click_coordinates(event):
     x, y = event.x, event.y
     print(f"Mouse clicked at: ({x}, {y})")
 
-#app.bind("<Button-1>", print_click_coordinates)
+# app.bind("<Button-1>", print_click_coordinates)
 
 
 app.mainloop()
