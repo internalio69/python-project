@@ -4,6 +4,8 @@ from PIL import Image
 class LoginForm:
     
     users = {}
+    passViewHideImg = tk.CTkImage(light_image=Image.open('images/pass-view/hide.png'))
+    passViewShowImg = tk.CTkImage(light_image=Image.open('images/pass-view/show.png'))
     
     def __init__(self, window):
         self.window = window
@@ -27,8 +29,9 @@ class LoginForm:
         self.entryPass = tk.CTkEntry(self.window, width=250, height=30, corner_radius=5, border_width=1, bg_color="transparent", border_color="#ffffff", text_color="white", placeholder_text="Password", show="*", font=("Arial Bold", 14))
         self.entryPass.pack(side="top", pady=2)
         
-        self.passViewBtn = tk.CTkButton(self.window, command=self.toggle_pass_visibility, fg_color="transparent", text="V", width=2, height=2)
-        self.passViewBtn.place(x=330, y=242)
+        # Password View Btn
+        self.passView = tk.CTkButton(self.window, text="", image=self.passViewShowImg, command=self.toggle_pass_visibility, height=5, width=5, fg_color="transparent", hover_color="#424242")
+        self.passView.place(x=330, y=233)
         
         self.loginBtn = tk.CTkButton(self.window, text="Login", command=self.login_event, hover_color="#a632c9", fg_color="#9d12c7")
         self.loginBtn.pack(side="top", pady=20)
@@ -48,8 +51,10 @@ class LoginForm:
     def toggle_pass_visibility(self):
         if (self.entryPass.cget("show") == "*"):
             self.entryPass.configure(show="")
+            self.passView.configure(image=self.passViewHideImg)
         else:
             self.entryPass.configure(show="*")
+            self.passView.configure(image=self.passViewShowImg)
 
     def login_event(self):
         self.errorLabel1.configure(text="")
