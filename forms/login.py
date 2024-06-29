@@ -39,11 +39,11 @@ class LoginForm:
 
         # credentials section
         if (self.entryUser == None):
-            self.entryUser = tk.CTkEntry(self.window, width=250, height=30, corner_radius=5, fg_color=("#D9D9D9" , "#1D1D1D"), border_width=0, placeholder_text="Username", font=("Arial Bold", 14))
+            self.entryUser = tk.CTkEntry(self.window, width=250, height=30, corner_radius=5, fg_color=("#C7C7C7" , "#1D1D1D"), border_width=0, placeholder_text="Username", font=("Arial Bold", 14))
             self.entryUser.pack(side="top", pady=20)
         
         if (self.entryPass == None):
-            self.entryPass = tk.CTkEntry(self.window, width=250, height=30, corner_radius=5, fg_color=("#D9D9D9" , "#1D1D1D"), border_width=0, placeholder_text="Password", show="*", font=("Arial Bold", 14))
+            self.entryPass = tk.CTkEntry(self.window, width=250, height=30, corner_radius=5, fg_color=("#C7C7C7" , "#1D1D1D"), border_width=0, placeholder_text="Password", show="*", font=("Arial Bold", 14))
             self.entryPass.pack(side="top", pady=2)
         else:
             self.passView.configure(command=self.toggle_pass_visibility)
