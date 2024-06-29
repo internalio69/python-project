@@ -26,7 +26,7 @@ class RegisterForm():
         self.passView.configure(command=self.toggle_pass_visibility)
 
         # credentials entry
-        self.entryPassConf = tk.CTkEntry(self.window, width=250, height=30, corner_radius=5, border_width=2, bg_color="transparent", border_color="#424242", placeholder_text="Confirm Password", show="*", font=("Arial Bold", 14))
+        self.entryPassConf = tk.CTkEntry(self.window, width=250, height=30, corner_radius=5, fg_color=("#D9D9D9" , "#1D1D1D"), border_width=0, placeholder_text="Confirm Password", show="*", font=("Arial Bold", 14))
         self.entryPassConf.pack(side="top", pady=20)
         
         self.registerBtn = tk.CTkButton(self.window, text="Register", hover_color="#4cb569", fg_color="#32a852", font=("Arial", 13), command=self.register_event)
