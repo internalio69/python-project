@@ -1,10 +1,11 @@
 import customtkinter as tk
-from PIL import Image
+from PIL import Image,ImageFilter
 import qrcode
 
 class QRCode:
-    def __init__(self, window):
+    def __init__(self, window, home):
         self.window = window
+        self.home = home
         
     def initialize(self):
         self.window.title("QR Code Generator")
@@ -15,6 +16,15 @@ class QRCode:
         self.my_frame1 = Frame1(master=self.window, frame2=self.my_frame2)
         self.my_frame1.grid(row=0, column=0, padx=20, pady=30, sticky="nsew")
         self.my_frame2.grid(row=0, column=1, padx=20, pady=30, sticky="nsew")
+
+        self.backBtn = tk.CTkButton(self.window, text="⬅", fg_color="#424242", width=30, border_spacing=5, border_width=3, border_color="#424242", hover_color="#575656", corner_radius=5, font=("Arial Bold", 10), command=self.back)
+        self.backBtn.place(x=225, y=42)
+    
+    def back(self):
+        self.my_frame1.destroy()
+        self.my_frame2.destroy()
+        self.backBtn.destroy()
+        self.home.initialize()
 
 class Frame1(tk.CTkFrame):
     colours=("Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "Black", "White")
@@ -37,6 +47,10 @@ class Frame1(tk.CTkFrame):
         
         self.data_label = tk.CTkLabel(self, text="Data:", font=self.font_data)
         self.data_label.grid(row=1, column=0, padx=5, pady=1, sticky="nsw")
+
+        self.errorlabel = tk.CTkLabel(self, text="", text_color="red", fg_color="transparent", height=2)
+        self.errorlabel.grid(row=0, column=0, padx=10, pady=10, sticky="w", rowspan=2)
+
         self.qr_data = tk.CTkEntry(self, width=440, height=30, font=self.font_data, corner_radius=5, fg_color=("#B6B6B6", "#161616"), placeholder_text="Enter some data...")
         self.qr_data.grid(row=2, column=0, padx=10, pady=0, sticky="nsew", columnspan=2)
         
@@ -72,6 +86,12 @@ class Frame1(tk.CTkFrame):
         self.generate_btn.grid(row=9, column=0, columnspan=2)
 
     def generate_qrcode(self):
+        data = self.qr_data.get()
+        if (data == ""):
+            return self.errorlabel.configure(text="Please enter qrcode data!")
+        else:
+            self.errorlabel.configure(text="")
+
         ec = None
 
         if (self.qr_ec.get() == 0):
@@ -84,10 +104,10 @@ class Frame1(tk.CTkFrame):
             ec = qrcode.constants.ERROR_CORRECT_H
 
         qr = qrcode.QRCode(version=self.qr_version.get(), error_correction=ec)
-        qr.add_data(self.qr_data.get())
-        img = qr.make_image(fill_color=self.qr_fc.get(), back_color=self.qr_bac.get())
-        img.save('QRCode.png')
-        Frame2.load_qrcode(self.frame2, self.qr_data.get(), self.qr_bac.get())
+        qr.add_data(data)
+        self.img = qr.make_image(fill_color=self.qr_fc.get(), back_color=self.qr_bac.get())
+        self.img.save('QRCode.png')
+        Frame2.load_qrcode(self.frame2, data, self.qr_bac.get(), self.img)
 
 class Frame2(tk.CTkFrame):
     font_data=("Arial Bold", 15)
@@ -101,10 +121,27 @@ class Frame2(tk.CTkFrame):
 
         self.qrcode_data_text = tk.CTkLabel(self, text="No Generated QRCodes", width=200, height=40, font=self.font_data, corner_radius=5, fg_color=("#C7C7C7", "#1D1D1D"))
         self.qrcode_data_text.grid(row=0, sticky="s", pady=10)
+
+        self.saveas_btn = tk.CTkButton(self, font=self.font_data, text="⬇ Save As", width=30, height=30, command=self.saveas_qrcode, hover=False, fg_color="#9026B6")
     
     @staticmethod
-    def load_qrcode(self, data, fc):
+    def load_qrcode(self, data, fc, img):
+        self.img = img
         self.qrcode_data_text.configure(text=f"Data: {data}")
-        self.qrcode_img = tk.CTkImage(light_image=Image.open('QRCode.png'), size=(200,200))
-        self.qrcode_img_btn = tk.CTkButton(self, text="", image=self.qrcode_img, fg_color=fc, width=300, height=300, border_color=("#B6B6B6", "#161616"), border_width=3, hover=False)
+        img1 = Image.open('QRCode.png').convert('RGB')
+        self.qrcode_ctkimg = tk.CTkImage(light_image=img1.filter(ImageFilter.GaussianBlur(20)), size=(200,200))
+        self.qrcode_img_btn = tk.CTkButton(self, text="", image=self.qrcode_ctkimg, fg_color=fc, width=300, height=300, border_color=("#B6B6B6", "#161616"), border_width=3, hover=False)
         self.qrcode_img_btn.grid(row=1, sticky="n", rowspan=2)
+        self.saveas_btn.grid(row=2, column=0, columnspan=2, sticky="s", pady=20)
+
+        def remove_gaussian_blur():
+            self.qrcode_ctkimg = tk.CTkImage(light_image=Image.open('QRCode.png'), size=(200,200))
+            self.qrcode_img_btn.configure(image=self.qrcode_ctkimg)
+
+        self.after(1000, remove_gaussian_blur)
+
+    def saveas_qrcode(self):
+        file = tk.filedialog.asksaveasfile(filetypes=[("Portable Network Graphics (PNG)", ".png")], mode='wb', defaultextension=".png", initialfile="QRCode.png")
+        if file:
+            self.img.save(file)
+            file.close()

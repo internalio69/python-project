@@ -90,6 +90,7 @@ class LoginForm:
         elif (users.get(self.entryUser.get()) != self.entryPass.get()):
             self.errorLabel2.configure(text="Invalid Password")
         else:
+            username = self.entryUser.get()
             self.heading.destroy()
             self.image_label.destroy()
             self.entryUser.destroy()
@@ -100,8 +101,7 @@ class LoginForm:
             self.errorLabel2.destroy()
             self.registerLabel1.destroy()
             self.registerLabel2.destroy()
-
-            HomePage(self.window).initialize()
+            HomePage(self.window, username).initialize()
 
             return
             
