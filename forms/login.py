@@ -20,9 +20,6 @@ class LoginForm:
         
         if (self.heading == None):
             self.window.geometry("400x500+500+100")
-            self.theme = tk.StringVar(value="dark")
-            self.themeSwitch = tk.CTkSwitch(self.window, text="Dark", font=("Arial Bold", 15), variable=self.theme, onvalue="dark", offvalue="light", progress_color="black", command=self.switch_theme)
-            self.themeSwitch.place(x=1, y=0)
 
         # load image
         if (self.img == None):
@@ -74,10 +71,6 @@ class LoginForm:
         else:
             self.entryPass.configure(show="*")
             self.passView.configure(image=self.passViewShowImg)
-
-    def switch_theme(self):
-        self.themeSwitch.configure(text=f"{self.themeSwitch.get().capitalize()}")
-        tk.set_appearance_mode(self.themeSwitch.get())
 
     def login_event(self):
         self.errorLabel1.configure(text="")
