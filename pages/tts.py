@@ -90,7 +90,7 @@ class Frame1(tk.CTkFrame):
         self.frame2.lyrics.configure(text=self.textbox.get('1.0', tk.END))
         self.engine.setProperty('volume', self.volume.get()/10)
         voices = self.engine.getProperty('voices')
-        self.engine.setProperty('voice', voices[self.voice])
+        self.engine.setProperty('voice', voices[self.voice].id)
         self.engine.say(self.textbox.get('1.0', tk.END))
         self.engine.runAndWait()
         self.frame2.animation_start()
